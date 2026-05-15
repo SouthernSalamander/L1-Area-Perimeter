@@ -6,6 +6,7 @@ def area_generator():
     calculates the correct answer, asks the user for their answer, and tells them if they're correct."""
 
     error = "Please enter an integer"
+    answer = ""
 
     width = random.randint(1, 100)
     height = random.randint(1, 100)
@@ -15,13 +16,16 @@ def area_generator():
     question = f"What is the area of a shape with a width of {width} and a height of {height}? "
 
     print(f"Answer: {area}")
-    answer = int(input(f"{question}"))
 
-    if answer == area:
-        print(f"Correct! The answer was {area}")
-    elif answer == ValueError:
-        print(error)
-    else:
-        print(f"Incorrect! The answer was {area}")
+    while answer == "":
+        try:
+            answer = int(input(f"{question}"))
+
+            if answer == area:
+                print(f"Correct! The answer was {area}")
+            else:
+                print(f"Incorrect! The answer was {area}")
+        except ValueError:
+            print(error)
 
 area_generator()
