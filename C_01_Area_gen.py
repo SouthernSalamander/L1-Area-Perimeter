@@ -7,16 +7,29 @@ def area_generator():
 
     error = "Please enter an integer"
     answer = ""
-
+    shapes = ["square", "rectangle", "triangle"]
     width = random.randint(1, 100)
     height = random.randint(1, 100)
 
-    area = width * height
+    selected_shape = random.choice(shapes)
 
-    question = f"What is the area of a shape with a width of {width} and a height of {height}? "
+    # calculates area depending on what shape has been selected
+    if selected_shape == "rectangle":
+        area = width * height
+    elif selected_shape == "square":
+        area = width * 2
+    else:
+        area = width * height / 2
+
+    # asks user question based on what shape has been selected
+    if selected_shape == "square":
+        question = f"What is the area of a square with a width of {width} and a height of {width}? "
+    else:
+        question = f"What is the area of a {selected_shape} with a width of {width} and a height of {height}? "
 
     print(f"Answer: {area}")
 
+    # asks user for answer to question and tells them if they're correct
     while answer == "":
         try:
             answer = int(input(f"{question}"))
