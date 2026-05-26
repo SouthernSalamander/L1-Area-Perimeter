@@ -125,24 +125,31 @@ def question_generator():
     # asks user for answer to question and checks to see if they're correct
     while answer == "":
 
-            if question_type == "perimeter" and selected_shape == "triangle":
-                answer = num_check(question, num_type=float)
+            if question_type == "area" and selected_shape == "triangle":
+                answer = num_check(question, num_type=float, low=0, exit_code="xxx")
             else:
-                answer = num_check(question, num_type=int)
+                answer = num_check(question, num_type=int, exit_code="xxx")
 
             # tells the user what the answer was and if they were correct or not
-            if answer == correct_answer:
+            if answer == "xxx":
+                return answer
+            elif answer == correct_answer:
                 print(f"Correct! The answer was {correct_answer}")
+                return "Correct"
             else:
                 print(f"Incorrect! The answer was {correct_answer}")
+                return "Incorrect"
 
 
 # Main routine starts here
 
 # initialize variables
-mode = "regular"
-end_game = "no"
+correct_answers = 0
+incorrect_answers = 0
 questions_answered = 0
+mode = "regular"
+
+quiz_history = []
 
 # Instructions
 
@@ -154,7 +161,7 @@ if want_instructions == "yes":
 
 # ask user for number of questions (or if they want infinite mode)
 num_questions = num_check("How many questions do you want to answer? (<enter> for infinite): ",
-                          low=1, exit_code="", num_type=int)
+                          low=0, exit_code="", num_type=int)
 
 if num_questions == "":
     mode = "infinite"
@@ -165,13 +172,49 @@ while questions_answered < num_questions:
 
     # prints round number heading
     if mode == "infinite":
-        question_heading = f"\n=== Question {questions_answered + 1} (Infinite Mode) === \n"
+        question_heading = f"\n=== Question {questions_answered + 1} (Infinite Mode) ===\n"
     else:
-        question_heading = f"\nQuestion {questions_answered + 1} of {num_questions}"
+        question_heading = f"\n=== Question {questions_answered + 1} of {num_questions} ===\n"
 
     print(question_heading)
 
-    question_generator()
+    # generates random area / perimeter question, checks if user got it correct
+    user_answer = question_generator()
+
+    # if user enters exit code, end quiz
+    if user_answer == "xxx":
+        break
+    # record whether the user got the answer correct or not
+    elif user_answer == "Correct":
+        correct_answers += 1
+    elif user_answer == "Incorrect":
+        incorrect_answers += 1
 
     questions_answered += 1
 
+    if mode == "infinite":
+        num_questions += 1
+
+    # add results of question to quiz history
+    question_feedback = f"Question {questions_answered}: {user_answer}"
+    quiz_history.append(question_feedback)
+
+# Quiz ends here
+
+# if user has answered at least 1 question, ask if they want to display their results (history)
+if questions_answered > 0:
+
+    print("*** Quiz End! ***")
+
+    # quiz history
+    see_history = string_checker("Do you want to see your results? ")
+    if see_history == "yes":
+        print("\n*** Quiz History ***")
+        for item in quiz_history:
+            print(item)
+
+else:
+    # if user quit without answering any questions, shame them for being the chicken they are
+    print("\n🐔🐔🐔 CHICKEN! BAKAW BAKAW!! *various other chicken noises because you're a chicken* (you chickened out without answering any questions) 🐔🐔🐔")
+
+print("\nProgram continues...")
