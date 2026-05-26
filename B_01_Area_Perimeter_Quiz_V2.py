@@ -37,47 +37,32 @@ def string_checker(question, valid_ans=("yes", "no")):
         print(error)
         print()
 
-def int_check(question, low=None, high=None, exit_code=None):
+def num_check(question, num_type=None, low=0, exit_code="xxx"):
 
-   # if any integer is allowed...
-   if low is None and high is None:
-       error = "Please enter an integer"
+    """checks users enter an int / float that is more than a minimum (default minimum is zero)
+    Allows an 'exit' code"""
 
-   # if the number needs to be more than an
-   # integer (ie: rounds / 'high number')
-   elif low is not None and high is None:
-        error = (f"Please enter an integer that is "
-             f"more than / equal to {low}")
+    error = f"Please enter an integer that is more than {low}."
 
-    # if the number needs to be between low & high
-   else:
-       error = (f"Please enter an integer that"
-                f" is between {low} and {high} (inclusive)")
+    while True:
+        # Ask user question and return response if
+        # exit code is entered
+        response = input(question)
+        if response == exit_code:
+            return response
 
-   while True:
-       response = input(question).lower()
+        # Check response is more than the minimum
+        try:
+            response = num_type(response)
 
-       # check for infinite mode / exit code
-       if response == exit_code:
-           return response
+            if response > low:
+                return response
+            else:
+                print(error)
 
-       try:
-           response = int(response)
-
-           # Check the integer is not too low...
-           if low is not None and response < low:
-               print(error)
-
-           # check response is more than the low number
-           elif high is not None and response > high:
-               print(error)
-
-           # if response is valid, return it
-           else:
-               return response
-
-       except ValueError:
-           print(error)
+        # Show error if response is invalid
+        except ValueError:
+            print(error)
 
 def question_generator():
 
@@ -85,7 +70,6 @@ def question_generator():
     calculates the correct answer, asks the user for their answer, and tells them if they're correct."""
 
     # initialize variables
-    error = "Please enter an integer"
     answer = ""
     shapes = ["square", "rectangle", "triangle"]
     type_list = ["area", "perimeter"]
@@ -140,8 +124,11 @@ def question_generator():
 
     # asks user for answer to question and checks to see if they're correct
     while answer == "":
-        try:
-            answer = int(input(f"{question}"))
+
+            if question_type == "perimeter" and selected_shape == "triangle":
+                answer = num_check(question, num_type=float)
+            else:
+                answer = num_check(question, num_type=int)
 
             # tells the user what the answer was and if they were correct or not
             if answer == correct_answer:
@@ -149,8 +136,6 @@ def question_generator():
             else:
                 print(f"Incorrect! The answer was {correct_answer}")
 
-        except ValueError:
-            print(error)
 
 # Main routine starts here
 
@@ -168,8 +153,8 @@ if want_instructions == "yes":
     instructions()
 
 # ask user for number of questions (or if they want infinite mode)
-num_questions = int_check("How many questions do you want to answer? (<enter> for infinite): ",
-                          low=1, exit_code="")
+num_questions = num_check("How many questions do you want to answer? (<enter> for infinite): ",
+                          low=1, exit_code="", num_type=int)
 
 if num_questions == "":
     mode = "infinite"
