@@ -107,9 +107,9 @@ def question_generator():
         area = (width * height) / 2
 
         if question_type == "perimeter":
-            question = f"What is the {question_type} of a triangle with sides of {side_a}, {side_b} and {side_c}? "
+            question = f"What is the perimeter of a triangle with sides of {side_a}, {side_b} and {side_c}? "
         else:
-            question = f"What is the {question_type} of a triangle with a width of {width} and a height of {height}? "
+            question = f"What is the area of a triangle with a width of {width} and a height of {height}? "
 
     if question_type == "perimeter":
         print(f"Answer: {perimeter}")
@@ -125,8 +125,11 @@ def question_generator():
     # asks user for answer to question and checks to see if they're correct
     while answer == "":
 
+            print("Question type", question_type)
+            print("Selected shape", selected_shape)
+
             if question_type == "area" and selected_shape == "triangle":
-                answer = num_check(question, num_type=float, low=0, exit_code="xxx")
+                answer = num_check(question, num_type=float, exit_code="xxx")
             else:
                 answer = num_check(question, num_type=int, exit_code="xxx")
 
@@ -135,10 +138,12 @@ def question_generator():
                 return answer
             elif answer == correct_answer:
                 print(f"Correct! The answer was {correct_answer}")
-                return "Correct"
-            else:
+                return "Correct ✅"
+            elif answer != correct_answer:
                 print(f"Incorrect! The answer was {correct_answer}")
-                return "Incorrect"
+                return "Incorrect ❌"
+
+    return "hello miss my code is not jank at all you can keep scrolling"
 
 
 # Main routine starts here
@@ -185,9 +190,9 @@ while questions_answered < num_questions:
     if user_answer == "xxx":
         break
     # record whether the user got the answer correct or not
-    elif user_answer == "Correct":
+    elif user_answer == "Correct ✅":
         correct_answers += 1
-    elif user_answer == "Incorrect":
+    elif user_answer == "Incorrect ❌":
         incorrect_answers += 1
 
     questions_answered += 1
@@ -204,17 +209,21 @@ while questions_answered < num_questions:
 # if user has answered at least 1 question, ask if they want to display their results (history)
 if questions_answered > 0:
 
-    print("*** Quiz End! ***")
+    print("\n*** Quiz End! ***")
 
-    # quiz history
+    # calculates what percent of the questions the user answered correctly
+    question_worth = 100 / questions_answered
+    percent_correct = question_worth * correct_answers
+
+    # print quiz history and statistics
     see_history = string_checker("Do you want to see your results? ")
     if see_history == "yes":
-        print("\n*** Quiz History ***")
+        print("\n*** Quiz History ***\n")
         for item in quiz_history:
             print(item)
+        print(f"Correct Answers: {percent_correct:.1f}%")
 
 else:
     # if user quit without answering any questions, shame them for being the chicken they are
-    print("\n🐔🐔🐔 CHICKEN! BAKAW BAKAW!! *various other chicken noises because you're a chicken* (you chickened out without answering any questions) 🐔🐔🐔")
-
-print("\nProgram continues...")
+    print("\n🐔🐔🐔 CHICKEN! BAKAW BAKAW!! *various other chicken noises because you're a chicken* "
+          "(you chickened out without answering any questions) 🐔🐔🐔")
