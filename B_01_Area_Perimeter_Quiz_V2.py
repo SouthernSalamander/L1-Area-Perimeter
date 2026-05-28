@@ -8,7 +8,10 @@ def instructions():
     print("""
 *** Instructions ***
 
--Instructions go here
+- Input how many questions you want to answer in the quiz (press <enter> for infinite)
+- Answer random area / perimeter questions 
+- Input "xxx" to end the program
+
     """)
 
 def string_checker(question, valid_ans=("yes", "no")):
@@ -94,7 +97,7 @@ def question_generator():
         question = f"What is the {question_type} of a square with a width of {width} and a height of {width}? "
 
     # if the shape is a rectangle, the width and height are two separate values
-    elif question_type == "rectangle":
+    elif selected_shape == "rectangle":
         perimeter = (width * 2) + (height * 2)
         area = width * height
 
@@ -124,9 +127,6 @@ def question_generator():
 
     # asks user for answer to question and checks to see if they're correct
     while answer == "":
-
-            print("Question type", question_type)
-            print("Selected shape", selected_shape)
 
             if question_type == "area" and selected_shape == "triangle":
                 answer = num_check(question, num_type=float, exit_code="xxx")
@@ -215,13 +215,14 @@ if questions_answered > 0:
     question_worth = 100 / questions_answered
     percent_correct = question_worth * correct_answers
 
-    # print quiz history and statistics
-    see_history = string_checker("Do you want to see your results? ")
+    # print quiz history and percentage of correct answers
+    print(f"\nCorrect Answers: {percent_correct:.1f}%")
+
+    see_history = string_checker("Do you want to see your quiz history? ")
     if see_history == "yes":
         print("\n*** Quiz History ***\n")
         for item in quiz_history:
             print(item)
-        print(f"Correct Answers: {percent_correct:.1f}%")
 
 else:
     # if user quit without answering any questions, shame them for being the chicken they are
